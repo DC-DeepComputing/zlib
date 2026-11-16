@@ -14,7 +14,7 @@ CRC_HOOK = """#ifdef HAVE_RVV
 """
 
 ADLER_HOOK = """#ifdef HAVE_RVV
-    if (len >= 32) {
+    if (len >= 64) {
         uLong rvv;
         extern int zlib_rvv_adler32(uLong, const Bytef *, z_size_t, uLong *);
         if (zlib_rvv_adler32(adler, buf, len, &rvv))

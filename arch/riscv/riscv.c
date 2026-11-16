@@ -47,7 +47,7 @@ int zlib_rvv_adler32(uLong adler, const Bytef FAR *buf, z_size_t len,
                      uLong *out) {
     if (zlib_rvv_enabled < 0)
         zlib_rvv_probe();
-    if (zlib_rvv_enabled && len >= 32) {
+    if (zlib_rvv_enabled && len >= 64) {
         *out = adler32_rvv_z(adler, buf, len);
         return 1;
     }
