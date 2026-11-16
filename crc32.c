@@ -627,6 +627,15 @@ uLong ZEXPORT crc32_z(uLong crc, const unsigned char FAR *buf, z_size_t len) {
     /* Return initial CRC, if requested. */
     if (buf == Z_NULL) return 0;
 
+#ifdef HAVE_RVV
+    if (len >= 64) {
+        uLong rvv;
+        extern int zlib_rvv_crc32(uLong, const unsigned char FAR *, z_size_t, uLong *);
+        if (zlib_rvv_crc32(crc, buf, len, &rvv))
+            return rvv;
+    }
+#endif
+
 #ifdef DYNAMIC_CRC_TABLE
     z_once(&made, make_crc_table);
 #endif /* DYNAMIC_CRC_TABLE */

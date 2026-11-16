@@ -94,6 +94,15 @@ uLong ZEXPORT adler32_z(uLong adler, const Bytef *buf, z_size_t len) {
     }
 
     /* do length NMAX blocks -- requires just one modulo operation */
+#ifdef HAVE_RVV
+    if (len >= 32) {
+        uLong rvv;
+        extern int zlib_rvv_adler32(uLong, const Bytef *, z_size_t, uLong *);
+        if (zlib_rvv_adler32(adler | (sum2 << 16), buf, len, &rvv))
+            return rvv;
+    }
+#endif
+
     while (len >= NMAX) {
         len -= NMAX;
         n = NMAX / 16;          /* NMAX is divisible by 16 */
